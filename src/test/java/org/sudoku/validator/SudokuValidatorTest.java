@@ -1,34 +1,43 @@
 package org.sudoku.validator;
 
+import java.util.Arrays;
 import org.junit.Assert;
-import org.junit.Ignore;
+import org.junit.Test;
+import static org.mockito.Mockito.*;
+import org.sudoku.validator.validators.SudokuModelValidator;
 
 /**
  *
  */
-//@RunWith(SpringRunner.class)
-//@SpringBootTest
-@Ignore
 public class SudokuValidatorTest {
 
-    //@Autowired
     private SudokuValidator sudokuValidator;
 
-    //@Test
-    public void testValid() {
-        int[][] sudoku = {
-            {1, 6, 8, 4, 5, 7, 9, 3, 2},
-            {5, 7, 2, 3, 9, 1, 4, 6, 8},
-            {9, 3, 4, 6, 2, 8, 5, 1, 7},
-            {8, 2, 9, 7, 4, 3, 1, 5, 6},
-            {6, 5, 1, 2, 8, 9, 3, 7, 4},
-            {7, 4, 3, 5, 1, 6, 2, 8, 9},
-            {3, 9, 5, 8, 7, 2, 6, 4, 1},
-            {4, 1, 7, 9, 6, 5, 8, 2, 3},
-            {2, 8, 6, 1, 3, 4, 7, 9, 5}};
+    @Test
+    public void testAllValid() {
+        SudokuModelValidator validator1 = mock(SudokuModelValidator.class);
+        when(validator1.validate(any())).thenReturn(Boolean.TRUE);
+        SudokuModelValidator validator2 = mock(SudokuModelValidator.class);
+        when(validator2.validate(any())).thenReturn(Boolean.TRUE);
 
-        boolean result = sudokuValidator.validate(sudoku);
+        sudokuValidator = new SudokuValidator(Arrays.asList(validator1, validator2));
+
+        boolean result = sudokuValidator.validate(any());
 
         Assert.assertTrue(result);
+    }
+
+    @Test
+    public void testSomeValid() {
+        SudokuModelValidator validator1 = mock(SudokuModelValidator.class);
+        when(validator1.validate(any())).thenReturn(Boolean.TRUE);
+        SudokuModelValidator validator2 = mock(SudokuModelValidator.class);
+        when(validator2.validate(any())).thenReturn(Boolean.FALSE);
+
+        sudokuValidator = new SudokuValidator(Arrays.asList(validator1, validator2));
+
+        boolean result = sudokuValidator.validate(any());
+
+        Assert.assertFalse(result);
     }
 }
